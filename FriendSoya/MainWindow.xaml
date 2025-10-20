@@ -6,12 +6,13 @@
         AllowsTransparency="True"
         Background="Transparent"
         Topmost="True"
-        Width="200" 
-        Height="200"
-        Opacity="0.8">
-    <Grid MouseDown="Grid_MouseDown">
-        <!-- Наша первая, простейшая форма джинна -->
-        <Ellipse x:Name="heart" Width="100" Height="100" RenderTransformOrigin="0.5,0.5">
+        Width="416" 
+        Height="416"
+        Opacity="0.9">
+    <Grid MouseDown="Grid_MouseDown" MouseUp="Grid_MouseUp">
+        <Image x:Name="gjinImage" Source="/Images/gjinIdle.png"></Image>
+
+        <Ellipse x:Name="heart" RenderTransformOrigin="0.5,0.5" Margin="150,198,151,98">
             <Ellipse.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform x:Name="heartScaleTransform" ScaleX="1" ScaleY="1"/>
@@ -26,41 +27,9 @@
                     <GradientStop Color="#1F0000FF" Offset="1"/>
                 </RadialGradientBrush>
             </Ellipse.Fill>
-
-            <Ellipse.Triggers>
-                <EventTrigger RoutedEvent="Loaded">
-                    <BeginStoryboard>
-                        <Storyboard RepeatBehavior="Forever" x:Name="ScaleStoryboardHeart">
-                            <DoubleAnimation
-                                Storyboard.TargetName="heartScaleTransform"
-                                Storyboard.TargetProperty="ScaleX"
-                                From="1.0"
-                                To="1.3"
-                                Duration="0:0:1" 
-                                AutoReverse="True"
-                            />
-
-                            <DoubleAnimation
-                                Storyboard.TargetName="heartScaleTransform"
-                                Storyboard.TargetProperty="ScaleY"
-                                From="1.0"
-                                To="1.3"
-                                Duration="0:0:1" 
-                                AutoReverse="True"
-                            />
-
-                            <ColorAnimation 
-                            Storyboard.TargetName="heartGradientColor"
-                            Storyboard.TargetProperty="Color"
-                            To="Blue" 
-                            Duration="0:0:1" 
-                            AutoReverse="True" />
-                            
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </Ellipse.Triggers>
+            <Ellipse.Effect>
+                <BlurEffect Radius="25"/>
+            </Ellipse.Effect>
         </Ellipse>
-        
     </Grid>
 </Window>
