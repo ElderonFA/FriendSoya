@@ -9,7 +9,37 @@
         Width="416" 
         Height="416"
         Opacity="0.9">
-    <Grid MouseDown="Grid_MouseDown" MouseUp="Grid_MouseUp">
+    
+    <Window.Resources>
+        <Style x:Key="ContextMenuButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#3A4FC3F7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid x:Name="MainGrid" MouseDown="Grid_MouseDown" MouseUp="Grid_MouseUp" MouseRightButtonDown="Grid_MouseRightButtonDown">
         <Image x:Name="gjinImage" Source="/Images/gjinIdle.png"></Image>
 
         <Ellipse x:Name="heart" RenderTransformOrigin="0.5,0.5" Margin="150,198,151,98">
@@ -31,5 +61,29 @@
                 <BlurEffect Radius="25"/>
             </Ellipse.Effect>
         </Ellipse>
+
+        <!-- Popup для контекстного меню -->
+        <Popup x:Name="ContextPopup" 
+               StaysOpen="True"
+               Placement="Mouse"
+               AllowsTransparency="True"
+               PopupAnimation="Fade" Closed="ContextPopup_Closed">
+
+            <!-- Содержимое Popup'а -->
+            <Border x:Name="MenuBorder"
+            Background="#E6101A2E"
+            BorderBrush="#7F4FC3F7"
+            BorderThickness="1"
+            CornerRadius="8">
+                <StackPanel Margin="5">
+                    <Button x:Name="ChatButton" Content="Открыть чат" 
+                    Style="{StaticResource ContextMenuButtonStyle}"
+                    Click="ContextChatButton_Click"/>
+                    <Button x:Name="AboutButton" Content="О программе"
+                    Style="{StaticResource ContextMenuButtonStyle}"        
+                    Click="AboutButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
 </Window>

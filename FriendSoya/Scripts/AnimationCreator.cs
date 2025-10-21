@@ -29,8 +29,7 @@ namespace FriendSoya.Scripts
             {
                 To = toColor,
                 Duration = duration,
-                AutoReverse = reverse,
-                RepeatBehavior = RepeatBehavior.Forever
+                AutoReverse = reverse
             };
 
             if (isForeverAnim)

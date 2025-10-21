@@ -1,5 +1,6 @@
 ﻿using FriendSoya.Scripts;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,10 +17,15 @@ namespace FriendSoya
             CreateAndPlayAnimHeartIdle();
         }
 
+        //---События
+        //События Grid
         private void Grid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //Перемещение окна
-            DragMove();
+            //Перемещение окна при нажатии ЛКМ
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                DragMove();
+            }
         }
 
         private async void Grid_MouseUp(object sender, MouseButtonEventArgs e)
@@ -28,6 +34,31 @@ namespace FriendSoya
                 await PlayReactAnim(2);
         }
 
+        private async void Grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ContextPopup.IsOpen = true;
+            await FixPopupAutoClose(ContextPopup);
+        }
+
+        //События кнопок контекстного меню попапа
+        private void ContextChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            ContextPopup.IsOpen = false;
+        }
+
+        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("FriendSoya. Version 1.0", "О программе");
+        }
+
+        private void ContextPopup_Closed(object sender, EventArgs e)
+        {
+            ContextPopup.StaysOpen = true;
+        }
+
+
+
+        //---Методы
         private async Task PlayReactAnim(double seconds)
         {
             _isInReactOnClick = true;
@@ -41,8 +72,10 @@ namespace FriendSoya
             CreateAndPlayAnimHeartIdle();
         }
 
+        //Работа с анимациями, перенесу в класс Animator
         private void CreateAndPlayAnimHeartIdle()
         {
+            //Меняем основное изображение
             gjinImage.Source = new BitmapImage(new Uri("pack://application:,,,/Images/gjinIdle.png"));
 
             //Анимация изменения размера
@@ -57,6 +90,7 @@ namespace FriendSoya
 
         private void CreateAndPlayAnimHeartOnClickReact()
         {
+            //Меняем основное изображение
             gjinImage.Source = new BitmapImage(new Uri("pack://application:,,,/Images/gjinSmile.png"));
 
             //Анимация изменения размера
@@ -67,6 +101,13 @@ namespace FriendSoya
             heartScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, pulseSizeHeartAnim);
             heartScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, pulseSizeHeartAnim);
             heartGradientColor.BeginAnimation(GradientStop.ColorProperty, pulseColorHeartAnim);
+        }
+
+        private async Task FixPopupAutoClose(Popup popUp)
+        {
+            await Task.Delay(100);
+
+            popUp.StaysOpen = false;
         }
     }
 }
