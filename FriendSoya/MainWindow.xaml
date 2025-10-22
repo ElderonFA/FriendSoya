@@ -5,7 +5,6 @@
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Topmost="True"
         Width="416" 
         Height="416"
         Opacity="0.9">
@@ -79,9 +78,12 @@
                     <Button x:Name="ChatButton" Content="Открыть чат" 
                     Style="{StaticResource ContextMenuButtonStyle}"
                     Click="ContextChatButton_Click"/>
+                    <Button x:Name="TopMostButton" Content="Обычное окно" 
+                    Style="{StaticResource ContextMenuButtonStyle}"
+                    Click="ContextTopMostButton_Click"/>
                     <Button x:Name="AboutButton" Content="О программе"
                     Style="{StaticResource ContextMenuButtonStyle}"        
-                    Click="AboutButton_Click"/>
+                    Click="ContextAboutButton_Click"/>
                 </StackPanel>
             </Border>
         </Popup>

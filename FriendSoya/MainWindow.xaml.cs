@@ -1,6 +1,7 @@
 ﻿using FriendSoya.Scripts;
 using FriendSoya.Windows;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -54,7 +55,15 @@ namespace FriendSoya
             _chatWidget.Focus();
         }
 
-        private void AboutButton_Click(object sender, RoutedEventArgs e)
+        private void ContextTopMostButton_Click(object sender, RoutedEventArgs e)
+        {
+            Topmost = !Topmost;
+
+            var button = (Button)sender;
+            button.Content = Topmost ? "Поверх всех окон" : "Обычное окно";
+        }
+
+        private void ContextAboutButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("FriendSoya. Version 1.0", "О программе");
         }
