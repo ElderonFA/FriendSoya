@@ -1,4 +1,5 @@
 ﻿using FriendSoya.Scripts;
+using FriendSoya.Windows;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -10,6 +11,8 @@ namespace FriendSoya
     public partial class MainWindow : Window
     {
         private bool _isInReactOnClick;
+
+        private ChatWidget _chatWidget = new ChatWidget();
 
         public MainWindow()
         {
@@ -44,6 +47,11 @@ namespace FriendSoya
         private void ContextChatButton_Click(object sender, RoutedEventArgs e)
         {
             ContextPopup.IsOpen = false;
+
+            _chatWidget.Left = Left;
+            _chatWidget.Top = Top;
+            _chatWidget.Show();
+            _chatWidget.Focus();
         }
 
         private void AboutButton_Click(object sender, RoutedEventArgs e)

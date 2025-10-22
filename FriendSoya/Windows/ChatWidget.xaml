@@ -1,0 +1,209 @@
+﻿<Window x:Class="FriendSoya.Windows.ChatWidget"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Разговор с Soya" Height="391" Width="310"
+        WindowStyle="None" 
+        AllowsTransparency="True"
+        Background="Transparent"
+        SizeToContent="Height"
+        MouseDown="Window_MouseDown"
+        MaxHeight="500">
+
+    <Window.Resources>
+        <!-- Стиль для кнопок -->
+        <Style x:Key="ButtonsStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#3A4FC3F7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для TextBox -->
+        <Style x:Key="ChatTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#1A4FC3F7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#7F4FC3F7"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                        Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#FF4FC3F7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для сообщений -->
+        <Style x:Key="MessageTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="10,3"/>
+        </Style>
+
+        <!-- DataTemplate для сообщений -->
+        <DataTemplate x:Key="MessageTemplate">
+            <Border Background="{Binding Background}" 
+                    CornerRadius="8" 
+                    Padding="10,5" 
+                    Margin="5,2">
+                <TextBlock Text="{Binding Text}" 
+                           Style="{StaticResource MessageTextStyle}"/>
+            </Border>
+        </DataTemplate>
+
+        <!-- СТИЛЬ ДЛЯ SCROLLBAR -->
+        <Style x:Key="MagicScrollBarStyle" TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid>
+                            <Track x:Name="PART_Track"
+                                   IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border x:Name="ThumbBorder"
+                                                        CornerRadius="4" 
+                                                        Background="#7F4FC3F7"
+                                                        BorderBrush="#4FC3F7"
+                                                        BorderThickness="1"
+                                                        Opacity="0.7">
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ThumbBorder" Property="Opacity" Value="1"/>
+                                                        <Setter TargetName="ThumbBorder" Property="Background" Value="#4FC3F7"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для ScrollViewer с кастомным ScrollBar -->
+        <Style x:Key="MagicScrollViewerStyle" TargetType="ScrollViewer">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollViewer">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ScrollContentPresenter Grid.Column="0"/>
+
+                            <!-- Используем стандартный ScrollBar с нашим стилем -->
+                            <ScrollBar Grid.Column="1" 
+                                       Style="{StaticResource MagicScrollBarStyle}"
+                                       Orientation="Vertical"
+                                       Minimum="0" 
+                                       Maximum="{TemplateBinding ScrollableHeight}"
+                                       ViewportSize="{TemplateBinding ViewportHeight}"
+                                       Value="{TemplateBinding VerticalOffset}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="5">
+        <!-- Фон -->
+        <Border Background="#E6101A2E"
+                BorderBrush="#7F4FC3F7"
+                BorderThickness="1"
+                CornerRadius="8"/>
+
+        <!-- Основной layout -->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <!-- Сообщения -->
+                <RowDefinition Height="Auto"/>
+                <!-- Поле ввода -->
+                <RowDefinition Height="Auto"/>
+                <!-- Кнопка закрыть -->
+            </Grid.RowDefinitions>
+
+            <!-- Область чата -->
+            <ScrollViewer Grid.Row="0" 
+                          x:Name="chatScrollViewer"
+                          Style="{StaticResource MagicScrollViewerStyle}"
+                          PreviewMouseDown="ScrollViewer_PreviewMouseDown">
+                <ItemsControl x:Name="chatItemsControl"
+                              ItemTemplate="{StaticResource MessageTemplate}"/>
+            </ScrollViewer>
+
+            <!-- Панель ввода -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,5">
+                <TextBox x:Name="inputTextBox" 
+                         Style="{StaticResource ChatTextBoxStyle}"
+                         Width="241" 
+                         Height="25"
+                         KeyDown="inputTextBox_KeyDown"/>
+                <Button x:Name="sendMessageButton" 
+                        Content="➤"
+                        Style="{StaticResource ButtonsStyle}" 
+                        Click="sendMessageButton_Click"
+                        Width="35" Height="25" Margin="5,0,0,0"/>
+            </StackPanel>
+
+            <!-- Кнопка закрытия -->
+            <Button Grid.Row="2" 
+                    x:Name="closeButton" 
+                    Content="Закрыть" 
+                    Style="{StaticResource ButtonsStyle}" 
+                    Click="closeButton_Click"
+                    Height="25" Margin="0,5,10,10" HorizontalAlignment="Right"/>
+        </Grid>
+    </Grid>
+</Window>
